@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Standar Pelayanan - Bea Cukai Cikarang (KEP-390/2025)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header & Navbar -->
+  <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="bg-amber-400 p-2.5 rounded-xl text-slate-900 font-black text-xl shadow-md">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight">KPPBC TMP CIKARANG</h1>
+            <p class="text-xs text-blue-200 font-medium tracking-wide">Panduan Standar Pelayanan Publik • KEP-390/KBC.0805/2025</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-800/80 text-blue-200 border border-blue-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Komponen A (Penyampaian Layanan)
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section & Filter/Search -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4 w-full">
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+      <div class="max-w-3xl mb-6">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Informasi Standar Pelayanan Publik</h2>
+        <p class="text-sm sm:text-base text-slate-600">
+          Telusuri persyaratan, alur mekanisme, jangka waktu penyelesaian, biaya, hingga produk layanan dari 34 produk layanan resmi pada KPPBC TMP Cikarang.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <div class="sm:col-span-8 relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Cari nama layanan atau kata kunci (cth: PIB, IMEI, Jaminan, TLDDP)..." 
+            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm bg-slate-50 focus:bg-white transition"
+          >
+        </div>
+        <div class="sm:col-span-4">
+          <select 
+            id="categoryFilter" 
+            class="w-full py-3 px-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm bg-slate-50 focus:bg-white transition"
+          >
+            <option value="ALL">Semua Kategori Layanan (34)</option>
+            <option value="IMPOR_EKSPOR">Impor, Ekspor & Manifes</option>
+            <option value="FASILITAS_TPB">Fasilitas / Tempat Penimbunan Berikat</option>
+            <option value="PERBENDAHARAAN">Perbendaharaan & Jaminan</option>
+            <option value="UMUM_PENGADUAN">Registrasi, Pengaduan & Lainnya</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Cards Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1 w-full">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        Menampilkan <span id="itemCount" class="text-blue-600 font-bold">34</span> Layanan
+      </p>
+    </div>
+
+    <div id="servicesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Cards rendered via JS -->
+    </div>
+
+    <div id="noResults" class="hidden text-center py-16">
+      <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl mb-3">
+        <i class="fa-regular fa-folder-open"></i>
+      </div>
+      <p class="text-slate-600 font-medium">Layanan tidak ditemukan</p>
+      <p class="text-xs text-slate-400 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+    </div>
+  </main>
+
+  <!-- Detail Modal (Komponen A) -->
+  <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-5 bg-gradient-to-r from-blue-900 to-indigo-900 text-white flex items-start justify-between">
+        <div>
+          <span id="modalNumber" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950 mb-2">Layanan #</span>
+          <h3 id="modalTitle" class="text-lg sm:text-xl font-bold leading-tight">Nama Layanan</h3>
+        </div>
+        <button onclick="closeModal()" class="text-slate-300 hover:text-white p-1 text-xl transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Komponen A Components) -->
+      <div class="p-6 overflow-y-auto scrollbar-thin space-y-6 text-sm">
+        
+        <!-- Summary Quick Badges -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-lg bg-blue-100 text-blue-800 text-base">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-medium">Jangka Waktu Penyelesaian</p>
+              <p id="modalDuration" class="font-bold text-slate-800">-</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-lg bg-emerald-100 text-emerald-800 text-base">
+              <i class="fa-solid fa-rupiah-sign"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-medium">Biaya / Tarif</p>
+              <p id="modalFee" class="font-bold text-slate-800">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Persyaratan Pelayanan -->
+        <div>
+          <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-file-circle-check text-blue-600"></i> Persyaratan Pelayanan
+          </h4>
+          <div id="modalRequirements" class="bg-white p-4 rounded-xl border border-slate-200 text-slate-700 space-y-2 whitespace-pre-line leading-relaxed"></div>
+        </div>
+
+        <!-- Sistem, Mekanisme & Prosedur -->
+        <div>
+          <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-network-wired text-indigo-600"></i> Sistem, Mekanisme, dan Prosedur
+          </h4>
+          <div id="modalProcedures" class="bg-white p-4 rounded-xl border border-slate-200 text-slate-700 space-y-2 whitespace-pre-line leading-relaxed"></div>
+        </div>
+
+        <!-- Produk Pelayanan -->
+        <div>
+          <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-file-invoice text-emerald-600"></i> Produk Pelayanan
+          </h4>
+          <div id="modalOutput" class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 text-slate-800 font-medium whitespace-pre-line"></div>
+        </div>
+
+        <!-- Penanganan Pengaduan -->
+        <div>
+          <h4 class="font-bold text-slate-900 text-base flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-headset text-purple-600"></i> Penanganan Pengaduan, Saran & Masukan
+          </h4>
+          <div id="modalComplaints" class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-600 text-xs space-y-1 whitespace-pre-line"></div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button onclick="closeModal()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition shadow">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-xs text-slate-500">
+      <p class="font-semibold text-slate-700">KPPBC TMP CIKARANG — KEP-390/KBC.0805/2025</p>
+      <p class="mt-1">Jl. Techno Boulevard Blok A2, Kawasan Industri Jababeka, Cikarang, Bekasi 17530</p>
+      <p class="mt-1 text-slate-400">Hubungi Konsultasi Resmi WhatsApp: +62 813-8080-0765 | Layanan Pengaduan: +62 812-9995-8558</p>
+    </div>
+  </footer>
+
+  <!-- Embedded Data & Interactive Script -->
+  <script>
+    // Data Lengkap Komponen A dari 34 Standar Pelayanan KEP-390/KBC.0805/2025
+    const services = [
+      {
+        id: 1,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Perubahan/Perbaikan Dokumen Pemberitahuan Impor Barang BC 2.0 dan BC 2.3",
+        duration: "5 (lima) hari kerja sejak diterima lengkap & benar",
+        fee: "Tidak dipungut biaya",
+        output: "1. Surat persetujuan perubahan; atau\n2. Surat penolakan perubahan",
+        requirements: `Permohonan memuat data:
+1. Nomor & tanggal pendaftaran PIB
+2. Identitas Importir dan/atau PPJK
+3. Elemen data yang dimintakan perubahan
+4. Alasan perubahan data PIB
+
+Lampiran:
+• Fotokopi PIB jika SKP mengalami gangguan operasional
+• Dokumen Pelengkap Pabean
+• Surat pernyataan/kronologis bermaterai
+• Bukti pendukung lainnya`,
+        procedures: `1. Importir mengajukan permohonan ke Pejabat Bea dan Cukai beserta dokumen pendukung.
+2. Petugas pendok menginput permohonan di surat masuk.
+3. Kepala Kantor menganalisa dan mendisposisi ke Seksi PKC.
+4. Kepala Seksi PKC mendisposisikan kepada petugas yang ditunjuk.
+5. Pejabat/pegawai menerima dan meneliti dokumen permohonan.
+6. Dalam hal diperlukan, dilakukan wawancara kepada importir.
+7. Menyampaikan rekomendasi ke Kepala Kantor atau Pejabat yang ditunjuk.
+8. Kepala Kantor/Pejabat yang ditunjuk menerbitkan Surat Persetujuan atau Surat Penolakan.`
+      },
+      {
+        id: 2,
+        category: "IMPOR_EKSPOR",
+        title: "Pembatalan Dokumen Pemberitahuan Impor Barang BC 2.0 dan BC 2.3 (Setelah Mendapat Nopen)",
+        duration: "3 (tiga) hari kerja sejak diterima lengkap & benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat/respon persetujuan atau penolakan permohonan pembatalan BC 2.0/BC 2.3",
+        requirements: `1. Memuat: No & tgl pengajuan, No & tgl PIB, identitas importir, alasan pembatalan.
+2. Bukti pendukung:
+• B/L atau Airway Bill
+• Semua PIB yang pernah diajukan untuk impor yang sama
+• No & tgl Inward Manifest / bukti pembatalan manifest
+• Bukti barang impor tidak jadi dibongkar / musnah karena force majeure`,
+        procedures: `1. Importir mengajukan permohonan pembatalan beserta persyaratan.
+2. Petugas pendok menginput surat masuk.
+3. Disposisi Kepala Kantor ke Seksi terkait.
+4. Pejabat/pegawai meneliti permohonan (dan wawancara bila diperlukan).
+5. Pejabat menyampaikan rekomendasi kepada Kepala Kantor.
+6. Penerbitan Surat Persetujuan atau Surat Penolakan Pembatalan.`
+      },
+      {
+        id: 3,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Penerimaan dan Penelitian Kelengkapan Dokumen PIB Jalur Merah (BC 2.0)",
+        duration: "Paling lambat 1 (satu) hari kerja sejak dokumen lengkap diterima",
+        fee: "Tidak dipungut biaya",
+        output: "Status dokumen 'Penerimaan Dokumen Pelengkap' pada portal pengguna jasa dan SKP",
+        requirements: `Dokumen pelengkap pabean PIB Jalur Merah (BC 2.0):
+• Invoice
+• Packing List
+• Bill of Lading (B/L) / Airway Bill (AWB)
+• Dokumen Identifikasi Barang
+• Dokumen Pemenuhan Persyaratan Impor (Lartas)
+• Dokumen lainnya yang dipersyaratkan`,
+        procedures: `1. Importir/kuasanya menyampaikan dokumen melalui SKP / email resmi / media yang ditetapkan.
+2. Petugas menerima, meneliti kelengkapan, dan merekam penerimaan pada SKP.
+3. Bila terdapat kekurangan, petugas menginformasikan pengguna jasa untuk melengkapi.`
+      },
+      {
+        id: 4,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Penerimaan & Penelitian Kelengkapan Dokumen Pelengkap Pabean Tambahan Dalam Rangka NPD",
+        duration: "Paling lambat 1 (satu) hari kerja sejak diterima",
+        fee: "Tidak dipungut biaya",
+        output: "Status dokumen 'Penerimaan Dokumen Pelengkap' pada portal pengguna jasa dan SKP",
+        requirements: `1. Dokumen pelengkap pabean tambahan disampaikan sesuai list permintaan pada respon NPD.
+2. Dalam hal terdapat dokumen yang tidak disampaikan, wajib menyertakan surat keterangan/pernyataan alasan tidak disampaikan.`,
+        procedures: `1. Importir atau kuasanya menyampaikan dokumen secara hardcopy / softcopy melalui email/media resmi.
+2. Pelaksana Penerima Dokumen menerima, meneliti, dan merekam penerimaan pada SKP.`
+      },
+      {
+        id: 5,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Penerimaan dan Penelitian Kelengkapan Dokumen SKA",
+        duration: "Paling lambat 1 (satu) hari kerja sejak kelengkapan SKA non-elektronik/DAB diterima",
+        fee: "Tidak dipungut biaya",
+        output: "Status dokumen 'Penerimaan Dokumen Pelengkap' pada portal pengguna jasa dan SKP",
+        requirements: `Menyerahkan Surat Keterangan Asal (SKA) melalui:
+• Lembar asli SKA; dan/atau
+• Hasil pindai berwarna/unduhan SKA melalui SKP/email/media elektronik yang ditetapkan dengan menunjuk pada nomor PIB.`,
+        procedures: `1. Importir / Penyelenggara TPB / PLB menyampaikan SKA bentuk fisik atau softcopy via SKP/email.
+2. Pelaksana Penerima Dokumen meneliti dan merekam penerimaan pada SKP.`
+      },
+      {
+        id: 6,
+        category: "UMUM_PENGADUAN",
+        title: "Pelayanan Pemberian Akun B'Cik",
+        duration: "Paling lama 2 (dua) hari kerja sejak berkas lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan atas pembuatan akun sistem B'Cik",
+        requirements: `1. Surat Permohonan
+2. Melampirkan dokumen pendukung:
+• NPWP Perusahaan
+• NIB beserta lampiran
+• Bukti legalitas penanggung jawab (Akta Perusahaan / Surat Penunjukan)`,
+        procedures: `1. Pemohon mengajukan permohonan akun B'Cik kepada Kepala Kantor atau Pejabat yang ditunjuk.
+2. Pejabat meneliti permohonan dan dokumen pendukung.
+3. Jika disetujui, surat persetujuan diterbitkan dan akun direkam ke sistem aplikasi B'Cik. Jika ditolak, surat penolakan dikirim.`
+      },
+      {
+        id: 7,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Permohonan Pembatalan PIB (BC 2.0) yang Belum Mendapatkan Nomor Pendaftaran",
+        duration: "Paling lama 3 (tiga) hari kerja sejak berkas lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan/Penolakan Permohonan Pembatalan PIB Belum Nopen",
+        requirements: `1. Surat Permohonan Pembatalan memuat: Nomor & tgl pengajuan, identitas importir, alasan pembatalan.
+2. Melampirkan bukti pendukung (draf PIB yang akan dibatalkan).
+3. Diajukan melalui Aplikasi B'Cik (atau email resmi jika belum memiliki akun).`,
+        procedures: `1. Pengguna jasa mengajukan melalui aplikasi B'Cik.
+2. Kepala Kantor / Pejabat ditunjuk meneliti berkas.
+3. Jika disetujui, Pejabat melakukan pembatalan pada SKP dan menerbitkan surat persetujuan. Jika tidak sesuai, diterbitkan penolakan.`
+      },
+      {
+        id: 8,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Perubahan/Perbaikan Dokumen Pemberitahuan Ekspor Barang BC 3.0",
+        duration: "5 (lima) hari kerja sejak permohonan lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "1. Surat persetujuan perubahan PEB\n2. Surat penolakan perubahan PEB",
+        requirements: `1. Data Pembetulan PEB / PP-PEB.
+2. Diajukan maksimal 30 hari sejak tanggal pendaftaran PEB, dengan ketentuan khusus batas waktu untuk komoditas curah/migas/short shipment sesuai KEP-390.`,
+        procedures: `1. Eksportir mengajukan PP-PEB beserta dokumen pendukung.
+2. Penelitian batas waktu, data perbaikan, serta konfirmasi status NHI/penegahan dari unit pengawasan.
+3. Pemeriksaan fisik jika terdapat penegahan.
+4. Pejabat menerbitkan respon persetujuan atau penolakan melalui SKP.`
+      },
+      {
+        id: 9,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Pembatalan Dokumen Pemberitahuan Ekspor Barang BC 3.0",
+        duration: "3 (tiga) hari kerja sejak permohonan lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "1. Surat persetujuan pembatalan PEB\n2. Surat penolakan pembatalan PEB",
+        requirements: `1. Surat permohonan pembatalan PEB dilampiri:
+• Cetak/salinan PEB & NPE
+• Surat pernyataan bermaterai dari TPS jika barang ditimbun di TPS
+• BL/AWB bila sarana pengangkut tetap berangkat
+2. Disampaikan maksimal 3 hari kerja sejak keberangkatan/perkiraan ekspor.`,
+        procedures: `1. Eksportir mengajukan permohonan pembatalan.
+2. Penelitian berkas dan konfirmasi manifes serta intelijen/pengawasan.
+3. Jika disetujui, Pejabat membubuhkan cap "DIBATALKAN" dan merekam pembatalan di SKP.`
+      },
+      {
+        id: 10,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Penyelesaian Returnable Package",
+        duration: "Paling lama 3 (tiga) hari kerja setelah berkas lengkap (cutoff 16.00 WIB)",
+        fee: "Tidak dipungut biaya",
+        output: "1. Surat Persetujuan Pengeluaran Returnable Package; atau\n2. Nota Penelitian Lebih Lanjut & Pemberitahuan",
+        requirements: `1. Surat Permohonan
+2. Copy SK Persetujuan Penggunaan Returnable Package dari Kepala Kantor
+3. Copy Invoice dan Packing List
+4. Copy Bill of Lading (B/L)`,
+        procedures: `1. Pemohon mengajukan via aplikasi mandiri B'Cik.
+2. Petugas Seksi Administrasi Manifes meneliti kelengkapan berkas.
+3. Penerbitan surat tugas dan pemeriksaan fisik barang di lapangan.
+4. Perekaman Laporan Hasil Pemeriksaan (LHP).
+5. Kepala Kantor menandatangani izin/persetujuan digital dan penutupan pos BC 1.1 pada CEISA 4.0.`
+      },
+      {
+        id: 11,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Ekspor Kembali Barang Impor Belum Aju Pemberitahuan Impor Barang",
+        duration: "Paling lama 2 hari kerja (tanpa wawancara) / 92 hari jika butuh penelitian pengawasan",
+        fee: "Tidak dipungut biaya",
+        output: "Surat persetujuan / penolakan / penundaan ekspor kembali",
+        requirements: `Dokumen wajib:
+• Surat permohonan reekspor & legalitas pemohon (API/NIB/Akta)
+• Surat Kuasa & Surat Tugas (bila dikuasakan)
+• Fotokopi B/L, Invoice, Packing List
+• Surat pernyataan bermaterai pemohon & surat kesediaan shipper menerima kembali barang
+• Kronologis bermaterai`,
+        procedures: `1. Pengajuan via aplikasi B'Cik.
+2. Petugas meneliti dan melakukan konfirmasi ke Seksi P2 & Seksi PKC TPP terkait status barang.
+3. Wawancara jika diperlukan.
+4. Kepala Kantor menelaah nota penelitian lalu menyetujui/menolak via Nadine & B'Cik.`
+      },
+      {
+        id: 12,
+        category: "FASILITAS_TPB",
+        title: "Pelayanan Pengeluaran Bahan Baku/Sisa & Penolong ke TLDDP",
+        duration: "2 (dua) hari kerja setelah permohonan lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan atau Penolakan Kepala Kantor Pabean",
+        requirements: `1. Izin Usaha Industri rekanan penerima di TLDDP
+2. Rincian dan alasan pengeluaran bahan baku/penolong/sisa
+3. Dokumen pemasukan asal barang ke Kawasan Berikat
+4. Risalah pemakaian bahan dan Sales Contract yang sah
+5. Dokumen lartas (jika terkena ketentuan pembatasan)`,
+        procedures: `1. Perusahaan mengajukan via aplikasi online B'Cik.
+2. Disposisi ke pelaksana Seksi PKC untuk diteliti.
+3. Pembuatan konsep persetujuan/penolakan.
+4. Kepala Kantor menandatangani surat keputusan persetujuan/penolakan.`
+      },
+      {
+        id: 13,
+        category: "FASILITAS_TPB",
+        title: "Pengeluaran Sementara ke TLDDP (Subkontrak, Perbaikan, Peminjaman Mesin, Pengetesan)",
+        duration: "2 (dua) hari kerja sejak diterima lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan atau Surat Penolakan Pengeluaran Sementara",
+        requirements: `• Fotokopi izin usaha rekanan di TLDDP
+• Kontrak perjanjian pekerjaan (memuat uraian, jangka waktu, konversi)
+• Rincian pungutan Bea Masuk, Cukai, dan PDRI
+• Surat pernyataan kesediaan diperiksa oleh Bea Cukai
+• NPWP rekanan TLDDP & Dokumen asal pabean`,
+        procedures: `1. Pengusaha KB/PDKB mengajukan lewat aplikasi B'Cik.
+2. Petugas meneliti kelengkapan administrasi dan validitas kontrak/perhitungan pungutan.
+3. Penerbitan konsep surat dinas persetujuan/penolakan via SatuKemenkeu.
+4. Pengiriman surat persetujuan/penolakan kepada pengguna jasa via B'Cik.`
+      },
+      {
+        id: 14,
+        category: "FASILITAS_TPB",
+        title: "Perpanjangan Izin Pengeluaran Sementara ke TLDDP (Subkontrak, Reparasi, Peminjaman)",
+        duration: "5 (lima) hari kerja setelah diterima lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan Perpanjangan Izin",
+        requirements: `• Izin usaha penerima di TLDDP & NPWP
+• Kontrak kerja perpanjangan pekerjaan & rincian BM/PDRI
+• Laporan realisasi pekerjaan sebelumnya dan alasan perpanjangan
+• Surat pernyataan posisi barang + foto barang (untuk perbaikan/peminjaman)
+• SK Persetujuan pengeluaran sebelumnya`,
+        procedures: `1. Pengajuan berkas perpanjangan via sistem B'Cik.
+2. Penerimaan & penelitian kesesuaian dokumen oleh Pelaksana PKC.
+3. Penandatanganan persetujuan/penolakan oleh Kasi PKC atas nama Kepala Kantor.
+4. Respon diterbitkan secara digital kepada pemohon.`
+      },
+      {
+        id: 15,
+        category: "FASILITAS_TPB",
+        title: "Pengeluaran Sementara ke TLDDP (Uji Mutu, Pameran, atau Tujuan Lainnya)",
+        duration: "2 (dua) hari kerja setelah diterima lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan atau Penolakan disertai alasan",
+        requirements: `• Izin usaha penerima di TLDDP
+• Perjanjian pekerjaan/kegiatan yang memuat rincian & waktu
+• Rincian pungutan pabean (BM/PDRI)
+• Surat kesediaan dilakukan pemeriksaan
+• NPWP rekanan & Dokumen pabean asal barang`,
+        procedures: `1. Pengajuan diajukan Pengusaha KB/PDKB lewat B'Cik.
+2. Pelaksana PKC meneliti dokumen dan menyusun konsep surat.
+3. Kasi PKC meneruskan rekomendasi ke Kepala Kantor untuk persetujuan.
+4. Dokumen persetujuan/penolakan dikirim via B'Cik.`
+      },
+      {
+        id: 16,
+        category: "FASILITAS_TPB",
+        title: "Perpanjangan Pengeluaran Sementara ke TLDDP (Uji Mutu, Pameran, atau Tujuan Lainnya)",
+        duration: "2 (dua) hari kerja setelah diterima lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan",
+        requirements: `• Kontrak kerja perpanjangan memuat data barang, identitas TLDDP, durasi
+• Rincian pungutan Bea Masuk dan PDRI
+• Surat pernyataan posisi barang dan alasan dilengkapi dokumentasi foto
+• Salinan persetujuan sebelumnya & NPWP rekanan`,
+        procedures: `1. Pemohon aju perpanjangan via B'Cik.
+2. Disposisi bertahap: Petugas -> Kepala Kantor -> Kasi PKC -> Pelaksana.
+3. Penelitian kesesuaian berkas.
+4. Pengesahan keputusan dan penyampaian respon persetujuan via B'Cik.`
+      },
+      {
+        id: 17,
+        category: "FASILITAS_TPB",
+        title: "Menerima Pekerjaan Dari Badan Usaha di TLDDP (Subkontrak, Reparasi, Pekerjaan Lain)",
+        duration: "2 (dua) hari kerja setelah berkas lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan Menerima Pekerjaan TLDDP",
+        requirements: `• Izin usaha pemberi pekerjaan di TLDDP (OSS/RBA)
+• Perjanjian kerja sama (uraian, waktu, konversi bahan)
+• Rincian bahan/barang yang ditambahkan oleh Kawasan Berikat
+• NPWP Badan Usaha pemberi pekerjaan di TLDDP`,
+        procedures: `1. Pengajuan permohonan melalui aplikasi B'Cik.
+2. Petugas memeriksa dokumen administrasi dan legalitas rekanan TLDDP.
+3. Disposisi dan penelitian teknis oleh pelaksana PKC.
+4. Penerbitan respon persetujuan/penolakan oleh Kasi PKC.`
+      },
+      {
+        id: 18,
+        category: "FASILITAS_TPB",
+        title: "Perusakan Barang di Kawasan Berikat yang Tidak Dapat Dimusnahkan",
+        duration: "2 (dua) hari kerja setelah syarat formal terpenuhi & konfirmasi hanggar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat persetujuan atau penolakan perusakan barang di Kawasan Berikat",
+        requirements: `1. Surat Permohonan
+2. Daftar rincian barang yang akan dirusak
+3. Keterangan mengenai alasan dan tata cara metode perusakan
+4. Dokumen pabean asal barang yang akan dirusak`,
+        procedures: `1. Pengusaha KB/PDKB aju via aplikasi BECIK.
+2. Penelitian berkas & permintaan konfirmasi/pencacahan ke Hanggar pengawas.
+3. Hanggar menyampaikan Berita Acara Pencacahan.
+4. Kepala Kantor menandatangani persetujuan perusakan via SatuKemenkeu.
+5. Penerbitan surat tugas pengawasan perusakan bagi petugas hanggar.`
+      },
+      {
+        id: 19,
+        category: "FASILITAS_TPB",
+        title: "Pelayanan Permohonan Penetapan / Izin Penyelenggara & Pengusaha KB / PDKB",
+        duration: "3 (tiga) hari kerja setelah Berita Acara Pemeriksaan Lokasi ditandatangani",
+        fee: "Tidak dipungut biaya",
+        output: "Nota Dinas Rekomendasi Pemberian Izin / Surat Pengembalian",
+        requirements: `• Permohonan via Portal INSW + kesiapan periksa lokasi
+• Akta pendirian, NIB/Izin industri OSS, Validasi KSWP valid
+• Bukti penguasaan lokasi, denah/layout berbatas jelas
+• SPT Tahunan Badan & Penanggung jawab
+• Surat pernyataan tidak pernah tindak pidana pabean & tidak pailit (10 thn)
+• CCTV online & kesiapan IT Inventory terintegrasi`,
+        procedures: `1. Calon pengusaha aju permohonan via Portal INSW.
+2. Bea Cukai menerbitkan surat tugas pemeriksaan dokumen dan lokasi fisik.
+3. Pemeriksaan lokasi (CCTV, IT Inventory, batas kawasan) dalam tempo 3 hari kerja.
+4. Penerbitan Berita Acara Pemeriksaan Dokumen dan Lokasi.
+5. Pemaparan proses bisnis kepada Kakanwil dan penerbitan rekomendasi.`
+      },
+      {
+        id: 20,
+        category: "FASILITAS_TPB",
+        title: "Perubahan Data Izin Kawasan Berikat / PDKB Melalui Kepala Kantor Pabean",
+        duration: "3 (tiga) hari kerja setelah berkas lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Berita Acara Pemeriksaan Dokumen dan Lokasi Perubahan Data",
+        requirements: `• Surat permohonan & bukti penguasaan lokasi
+• Denah/layout sebelum dan sesudah perubahan
+• Syarat lokasi satu hamparan vs tidak satu hamparan (profil risiko rendah, IT Inventory terpusat, CCTV, pembatas fisik yang jelas)`,
+        procedures: `1. Permohonan diajukan disertai pernyataan kesiapan periksa lokasi.
+2. Pemeriksaan fisik lapangan atas perubahan denah/luas dan IT Inventory.
+3. Penerbitan Berita Acara Pemeriksaan Dokumen dan Lokasi (maks 3 hari).
+4. Kepala Kantor menerbitkan nota dinas penerusan ke Kepala Kantor Wilayah.`
+      },
+      {
+        id: 21,
+        category: "FASILITAS_TPB",
+        title: "Pelayanan Penerimaan dan Penelitian Kelengkapan Dokumen BC 2.5",
+        duration: "Paling lambat 1 (satu) hari kerja sejak dokumen diterima",
+        fee: "Tidak dipungut biaya",
+        output: "Status dokumen 'Penerimaan Dokumen Pelengkap' pada portal pengguna jasa & SKP",
+        requirements: `Dokumen pelengkap pabean BC 2.5:
+• Invoice
+• Packing List
+• Delivery Order (DO) / Purchase Order (PO)
+• Dokumen Identifikasi Barang
+• Dokumen Asal Barang & dokumen terkait lainnya`,
+        procedures: `1. Pengusaha TPB menyampaikan dokumen pelengkap via SKP / email resmi.
+2. Petugas menerima, meneliti kelengkapan, dan merekam pada SKP.
+3. Notifikasi kekurangan jika data belum lengkap.`
+      },
+      {
+        id: 22,
+        category: "FASILITAS_TPB",
+        title: "Permohonan Surat Kuasa / Izin Operasi Dokumen BC 2.3 oleh PJT",
+        duration: "Paling lama 3 (tiga) hari kerja sejak berkas lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan pengoperasian dokumen TPB BC 2.3",
+        requirements: `• Surat Permohonan dari Perusahaan Jasa Titipan (PJT)
+• NIB, NPWP, NITKU, SK Pengusaha TPB, NPPJK
+• Kontrak kerjasama PJT dengan Pengusaha TPB
+• Surat Kuasa & surat pernyataan kesiapan sistem tracking IT yang dapat diakses DJBC
+• Pengajuan via aplikasi B'Cik`,
+        procedures: `1. PJT mengajukan permohonan via aplikasi B'Cik.
+2. Pejabat meneliti kelengkapan legalitas dan kontrak kerjasama.
+3. Perekaman surat kuasa ke dalam sistem SKP dan penerbitan surat persetujuan.`
+      },
+      {
+        id: 23,
+        category: "UMUM_PENGADUAN",
+        title: "Pelayanan Registrasi International Mobile Equipment Identity (IMEI)",
+        duration: "2 (dua) jam sejak persyaratan diterima lengkap dan benar",
+        fee: "Tidak dipungut biaya (Layanan pendaftaran gratis, pungutan bea masuk/pajak sesuai billing)",
+        output: "Billing DJBC / Bukti Pendaftaran IMEI",
+        requirements: `1. Bukti Pendaftaran IMEI berupa QR Code (dari Aplikasi Mobile Bea Cukai / Website resmi)
+2. Paspor asli pemohon
+3. Boarding Pass / Tiket kedatangan luar negeri
+4. Perangkat HKT (Handphone, Komputer Genggam, Tablet) fisik yang didaftarkan`,
+        procedures: `1. Penumpang membawa fisik gawai dan menunjukkan Kode QR beserta paspor dan boarding pass ke loket.
+2. Pejabat meneliti kesesuaian fisik dan memeriksa data penerbangan.
+3. Pejabat menetapkan nilai pabean dan menerbitkan billing pungutan impor jika melebihi fasilitas pembebasan.
+4. Pembayaran billing oleh penumpang via ATM/Mobile Banking/Gerai.`
+      },
+      {
+        id: 24,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Perbaikan Data BC 1.1 Inward Manifes",
+        duration: "Maks 2 hari kerja (selain consignee) / 3 hari kerja + wawancara (perubahan consignee)",
+        fee: "Tidak dipungut biaya",
+        output: "1. Surat Persetujuan Perbaikan Data Inward Manifes; atau\n2. Surat Penolakan",
+        requirements: `• Surat Permohonan & Surat Kuasa/Tugas
+• Revisi B/L
+• Surat pernyataan bermaterai alasan perbaikan
+• Surat pernyataan pelepasan/hak milik dari consignee lama dan baru (jika ganti consignee)
+• Diajukan via aplikasi B'Cik`,
+        procedures: `1. Pengajuan permohonan via aplikasi B'Cik.
+2. Verifikasi berkas oleh Seksi Administrasi Manifes.
+3. Wawancara kepada pengangkut/consignee jika ada pengalihan hak milik.
+4. Penandatanganan digital surat persetujuan dan update pos manifest pada SKP.`
+      },
+      {
+        id: 25,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Pembatalan Inward Manifes BC 1.1",
+        duration: "Paling lama 3 (tiga) hari kerja sejak dokumen lengkap (cutoff 16.00 WIB)",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan atau Surat Penolakan Pembatalan Inward Manifes",
+        requirements: `1. Surat Permohonan Pembatalan BC 1.1
+2. Surat Pernyataan bermaterai
+3. Copy B/L, Invoice, Packing List
+4. Surat tugas/kuasa bermaterai
+5. Kronologis kejadian bermaterai`,
+        procedures: `1. Pemohon aju via aplikasi B'Cik.
+2. Petugas manifes meneliti kebenaran substantif dan melakukan wawancara bila perlu.
+3. Penyusunan nota dinas penelitian ke Kepala Kantor.
+4. Persetujuan digital dan eksekusi pembatalan pos manifes di SKP.`
+      },
+      {
+        id: 26,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Perbaikan Data BC 1.1 Outward Manifes",
+        duration: "Maks 2 hari kerja (selain consignee) / 3 hari kerja (perubahan consignee)",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan atau Penolakan Perbaikan Outward Manifes",
+        requirements: `• Surat permohonan perbaikan outward manifest
+• Revisi B/L & surat kuasa bermaterai
+• Surat pernyataan kebenaran data dari pengguna jasa
+• Surat konfirmasi consignee (bila ubah nama penerima luar negeri)`,
+        procedures: `1. Pengajuan diajukan secara elektronik melalui B'Cik.
+2. Pemeriksaan kelengkapan dan validitas oleh seksi manifes.
+3. Wawancara pengangkut/eksportir bila diperlukan.
+4. Penerbitan keputusan persetujuan dan perbaikan data di SKP.`
+      },
+      {
+        id: 27,
+        category: "IMPOR_EKSPOR",
+        title: "Pelayanan Pembatalan Outward Manifes BC 1.1",
+        duration: "Paling lama 3 (tiga) hari kerja sejak berkas lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan / Penolakan Pembatalan Outward Manifes",
+        requirements: `• Surat Permohonan Pembatalan BC 1.1
+• Surat pernyataan bermaterai alasan pembatalan
+• Copy B/L, Packing List, Invoice
+• Kronologis dan surat tugas/kuasa pengurusan`,
+        procedures: `1. Pemohon aju berkas via B'Cik.
+2. Petugas meneliti alasan teknis pembatalan manifes keluar.
+3. Konfirmasi sarana pengangkut.
+4. Penerbitan surat keputusan pembatalan dan pembatalan pos di CEISA.`
+      },
+      {
+        id: 28,
+        category: "PERBENDAHARAAN",
+        title: "Pelayanan Penerimaan Jaminan Tunai",
+        duration: "1 (satu) hari kerja berikutnya sejak penyerahan jaminan tunai",
+        fee: "Tidak dipungut biaya",
+        output: "1. Bukti Penerimaan Jaminan (BPJ)\n2. Surat Penolakan Jaminan",
+        requirements: `1. Surat permohonan penyerahan jaminan
+2. Surat izin persetujuan pelaksanaan kegiatan / surat penetapan pabean
+3. Bukti transfer ke rekening resmi persepsi Bea Cukai`,
+        procedures: `1. Pengguna Jasa mengajukan permohonan melalui CEISA 4.0.
+2. Pejabat Seksi Perbendaharaan meneliti validitas transfer dan nilai kecukupan jaminan.
+3. Penerbitan Bukti Penerimaan Jaminan (BPJ) elektronik.`
+      },
+      {
+        id: 29,
+        category: "PERBENDAHARAAN",
+        title: "Pelayanan Penerimaan Jaminan Non-Tunai",
+        duration: "3 (tiga) hari kerja sejak penjamin menyampaikan data jaminan",
+        fee: "Tidak dipungut biaya",
+        output: "1. Bukti Penerimaan Jaminan (BPJ)\n2. Surat Penolakan Jaminan",
+        requirements: `1. Surat Permohonan
+2. Surat penetapan/persetujuan kegiatan yang wajib dijaminkan
+3. Lembar sertifikat/warkat jaminan asli (Customs Bond / Bank Garansi)`,
+        procedures: `1. Pengguna jasa mengajukan melalui CEISA 4.0.
+2. Pejabat Bea Cukai mengonfirmasi legalitas dan masa berlaku jaminan kepada pihak penjamin.
+3. Penerbitan Bukti Penerimaan Jaminan (BPJ) secara sistem.`
+      },
+      {
+        id: 30,
+        category: "PERBENDAHARAAN",
+        title: "Pelayanan Pengembalian Jaminan Tunai",
+        duration: "3 (tiga) hari kerja sejak permohonan lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan Pengembalian Jaminan dan Bilyet Giro",
+        requirements: `• Tanda Terima Pengembalian Jaminan & Surat Permohonan
+• Surat Kuasa & Surat pemberitahuan rekening bermaterai
+• Bukti Penerimaan Jaminan (BPJ) asli
+• Dokumen bukti kewajiban selesai (Rekap BC 2.6.1/2.6.2 divalidasi hanggar, Putusan Banding, dsb)`,
+        procedures: `1. Pengajuan permohonan via CEISA 4.0.
+2. Pejabat memverifikasi kelengkapan dokumen pengakhiran penjaminan.
+3. Penerbitan Bilyet Giro pengembalian dana titipan jaminan.
+4. Serah terima persetujuan dan bilyet giro ke pemilik jaminan.`
+      },
+      {
+        id: 31,
+        category: "PERBENDAHARAAN",
+        title: "Pelayanan Pengembalian Jaminan Non-Tunai",
+        duration: "3 (tiga) hari kerja sejak pengajuan permohonan lengkap",
+        fee: "Tidak dipungut biaya",
+        output: "Surat Persetujuan Pengembalian Jaminan dan Lembar Warkat Asli",
+        requirements: `• Tanda terima jaminan & Surat permohonan
+• BPJ asli & Surat Kuasa
+• Bukti dokumen kegiatan telah diselesaikan (Rekap BC 2.6 divalidasi hanggar, SK Keberatan/Banding)`,
+        procedures: `1. Pengguna Jasa mengajukan pencairan/pelepasan jaminan via CEISA 4.0.
+2. Verifikasi dokumen penyelesaian kewajiban pabean oleh petugas.
+3. Pengembalian sertifikat warkat jaminan asli beserta surat persetujuan.`
+      },
+      {
+        id: 32,
+        category: "UMUM_PENGADUAN",
+        title: "Penerimaan Pengaduan Masyarakat Secara Manual",
+        duration: "1 (satu) jam sejak diterima sampai mendapatkan tiket",
+        fee: "Tidak dipungut biaya",
+        output: "Nomor Tiket Register Pengaduan",
+        requirements: `1. Kejelasan identitas pelapor (KTP/Kontak valid)
+2. Kejelasan materi aduan memenuhi kaidah 4W + 1H (What, Who, When, Where, How)
+3. Disampaikan melalui saluran resmi: tatap muka, surat, email, atau kotak pengaduan`,
+        procedures: `1. Pengadu melapor ke Unit Kepatuhan Internal (UKI).
+2. Petugas merekam substansi aduan ke SIPUMA Kemenkeu.
+3. Sistem membuat tiket pengaduan otomatis.
+4. Nomor register diberikan kepada pengadu (melalui SMS/WA/email atau tanda terima fisik).`
+      },
+      {
+        id: 33,
+        category: "UMUM_PENGADUAN",
+        title: "Penanganan / Tindak Lanjut Pengaduan Masyarakat",
+        duration: "Maks 7 hari kerja (terbit Surat Tugas) & maks 3 hari kerja penyusunan NDTL",
+        fee: "Tidak dipungut biaya",
+        output: "Informasi status tindak lanjut penanganan pada aplikasi SIPUMA",
+        requirements: `• Kelengkapan materi laporan dugaan pelanggaran
+• Ketersediaan bukti pendukung awal yang dapat ditindaklanjuti
+• Memegang teguh asas objektivitas dan kerahasiaan`,
+        procedures: `1. UKI meneliti dan menyusun nota pendapat tindak lanjut.
+2. Kepala Seksi KI / Kepala Kantor menetapkan surat tugas dan pemanggilan.
+3. Tim pemeriksa internal melakukan Berita Acara Wawancara (BAW).
+4. Pembuatan Resume dan Nota Dinas Tindak Lanjut (NDTL) berupa sanksi, pembinaan, atau selesai.`
+      },
+      {
+        id: 34,
+        category: "UMUM_PENGADUAN",
+        title: "Pelayanan Pembukaan Segel Hasil Penindakan",
+        duration: "1 (satu) hari kerja sejak berkas lengkap dan benar",
+        fee: "Tidak dipungut biaya",
+        output: "Berita Acara Pembukaan Segel",
+        requirements: `1. Surat permohonan (memuat no BA segel, no PIB/dokumen, identitas, alasan buka segel)
+2. Bukti pendukung:
+• Dokumen pabean & SPPB
+• Bukti bayar sanksi administrasi (jika ada denda)
+• Dokumen pemenuhan lartas / izin reekspor`,
+        procedures: `1. Perusahaan mengajukan permohonan pembukaan segel.
+2. Petugas pendok menginput agenda surat masuk.
+3. Disposisi Kepala Kantor ke unit pengawasan terkait.
+4. Pejabat memeriksa kelengkapan persyaratan dan pemenuhan sanksi/lartas.
+5. Pelaksanaan pelepasan segel fisik di lokasi dan penandatanganan Berita Acara.`
+      }
+    ];
+
+    const standardComplaintContact = `1. Layanan Pengaduan BC Cikarang (WA/Telp): +62 812 9995 8558
+2. Konsultasi & Informasi (WA): +62 813 8080 0765
+3. Online: SPAN LAPOR! (lapor.go.id), WISE (wise.kemenkeu.go.id), SIPUMA (beacukai.go.id/pengaduan.html)
+4. Bravo Bea Cukai: 1500 225 | Email: pengaduan.beacukai@customs.go.id
+5. Lokasi Kantor: Jl. Techno Boulevard Blok A2, Kawasan Industri Jababeka, Cikarang`;
+
+    // Category Tags Helper
+    function getCategoryBadge(cat) {
+      switch(cat) {
+        case 'IMPOR_EKSPOR': 
+          return '<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Impor, Ekspor & Manifes</span>';
+        case 'FASILITAS_TPB': 
+          return '<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Kawasan Berikat (TPB)</span>';
+        case 'PERBENDAHARAAN': 
+          return '<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Perbendaharaan</span>';
+        default: 
+          return '<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">Umum & Layanan</span>';
+      }
+    }
+
+    // Render Cards
+    function renderServices(items) {
+      const grid = document.getElementById('servicesGrid');
+      const countEl = document.getElementById('itemCount');
+      const noRes = document.getElementById('noResults');
+      
+      grid.innerHTML = '';
+      countEl.textContent = items.length;
+
+      if (items.length === 0) {
+        noRes.classList.remove('hidden');
+        return;
+      }
+      noRes.classList.add('hidden');
+
+      items.forEach(s => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-blue-300 transition flex flex-col justify-between group cursor-pointer";
+        card.onclick = () => openModal(s.id);
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              ${getCategoryBadge(s.category)}
+              <span class="text-xs font-black text-slate-300 group-hover:text-blue-600 transition">#${s.id.toString().padStart(2, '0')}</span>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-blue-900 transition leading-snug line-clamp-2 mb-3">
+              ${s.title}
+            </h3>
+            <div class="space-y-2 text-xs text-slate-600">
+              <div class="flex items-start gap-2">
+                <i class="fa-regular fa-clock text-blue-600 mt-0.5"></i>
+                <span class="font-medium line-clamp-1">${s.duration}</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fa-solid fa-rupiah-sign text-emerald-600 mt-0.5 ml-0.5"></i>
+                <span class="font-medium">${s.fee}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-600">
+            <span>Lihat Persyaratan & Alur</span>
+            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition"></i>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Modal Control
+    function openModal(id) {
+      const item = services.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('modalNumber').textContent = `Layanan Standar #${item.id}`;
+      document.getElementById('modalTitle').textContent = item.title;
+      document.getElementById('modalDuration').textContent = item.duration;
+      document.getElementById('modalFee').textContent = item.fee;
+      document.getElementById('modalRequirements').textContent = item.requirements;
+      document.getElementById('modalProcedures').textContent = item.procedures;
+      document.getElementById('modalOutput').textContent = item.output;
+      document.getElementById('modalComplaints').textContent = standardComplaintContact;
+
+      document.getElementById('detailModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Filter & Search Engine
+    function filterData() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cat = document.getElementById('categoryFilter').value;
+
+      const filtered = services.filter(s => {
+        const matchesQuery = s.title.toLowerCase().includes(query) || 
+                             s.requirements.toLowerCase().includes(query) || 
+                             s.output.toLowerCase().includes(query);
+        const matchesCategory = (cat === "ALL") || (s.category === cat);
+        return matchesQuery && matchesCategory;
+      });
+
+      renderServices(filtered);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterData);
+    document.getElementById('categoryFilter').addEventListener('change', filterData);
+
+    // Close Modal on backdrop click or ESC
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if(e.target.id === 'detailModal') closeModal();
+    });
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closeModal();
+    });
+
+    // Initial Execution
+    renderServices(services);
+  </script>
+</body>
+</html>
